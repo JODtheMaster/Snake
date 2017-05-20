@@ -29,29 +29,31 @@ class Graphics:
 
         """      Motion handler      """
 
-        # Constantly move the snake forward.
-        snake.__move__()
-        time.sleep(0.5)                     # Delay before next movement of snake
-
-        # Get key events
+       # Get key events
         keys = pg.key.get_pressed()
 
         # Initialise turning
+        # !!! If you initialise turning each time you enter the loop, you get rid of
+        # !!! all of the turning history. You probably don't want to do this.
         turning = None
 
 
         # Define different "turnings" for different key events
+        # !!! You are correctly setting a turning point when a key is pressed
+        # !!! but... you are allowing only a single turning point, and each time
+        # !!! a key is pressed this will change, so the other snake segments never
+        # !!! turn to follow the first one.
         if keys[K_w]:
             turning = Turning(snake.snake[0].pos[0], snake.snake[0].pos[1], Directions.UP)
 
         elif keys[K_a]:
-            turning = Turning(snake.snake[0].pos[0], snake.snake[0].pos[1], Directions.UP)
+            turning = Turning(snake.snake[0].pos[0], snake.snake[0].pos[1], Directions.LEFT)
 
         elif keys[K_s]:
-            turning = Turning(snake.snake[0].pos[0], snake.snake[0].pos[1], Directions.UP)
+            turning = Turning(snake.snake[0].pos[0], snake.snake[0].pos[1], Directions.DOWN)
 
         elif keys[K_d]:
-            turning = Turning(snake.snake[0].pos[0], snake.snake[0].pos[1], Directions.UP)
+            turning = Turning(snake.snake[0].pos[0], snake.snake[0].pos[1], Directions.RIGHT)
 
 
         # Continuously detect whether the segment is at a turning point:
@@ -60,6 +62,12 @@ class Graphics:
                 if turning.__isTurn__(segment):                 # turning.__isTurn__()returns true if segment and turning have same pos
                     segment.__turn__(turning.direction)         # Turn the snake's segment in the direction specified
 
+        # Constantly move the snake forward.
+        # !!! I moved this until after the key press detection. It makes more sense to
+        # !!! detect which keys have been pressed and then do the moving afterwards.
+        # !!! I also slowed down speed to 5, for now.
+        snake.__move__()
+        time.sleep(0.5)  # Delay before next movement of snake
 
         """
         We are placing the turning at the snake's head position.

@@ -45,7 +45,7 @@ class Type(Enum):
     tail = 6
 
 # Game settings
-speed        = 30
+speed        = 5
 score        = 0
 highscore    = 0
 games_played = 0

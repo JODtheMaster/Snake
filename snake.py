@@ -102,6 +102,10 @@ class Segment:
     # Method for turning the snake
     def __turn__(self, direction):
         # If the segment is a body type, then change the type to the rotated segment type.
+        # !!! If the segment is a head or tail type, we will not execute any turn because
+        # !!! the direction changes only apply to self.type == body
+        # !!! this is also true for for Type.up, Type.down, Type.left, Type.right. You need to
+        # !!! rethink the logic here.
         if self.type == body:
             if direction == Directions.UP:
                 self.type = Type.up
