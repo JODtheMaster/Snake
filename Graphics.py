@@ -30,7 +30,7 @@ class Graphics:
                 screen.blit(grass, (x, y))
 
         # Render snake. This must be given under the while loop
-        snake.__display__(screen)
+        snake.display(screen)
 
         """      Motion handler      """
 
@@ -72,28 +72,33 @@ class Graphics:
             for turn in turns:
 
                 if turn.__isTurn__(segment):                 # turning.__isTurn__()returns true if segment and turning have same pos
-                    segment.__turn__(turn.direction)         # Turn the snake's segment in the direction specified
+                    segment.turn(turn.direction)         # Turn the snake's segment in the direction specified
                     #print("Turning in", turn.direction, "segment type", segment.type, "snake direction:", segment.direction)
                 else:
                 # We also need to continuously detect whether the turned segment has LEFT the turning point.
                 # If it has, we change it to a rotated version of the body.
-                    segment.__notTurn__()
+                    segment.notTurn()
+
+        # Remove turn once the tail has passed the turning point.
+        # Since this is after the code that turns in the tail should already have been turned.
+        for turn in turns:
+            if turn.pos == snake.snake[-1].pos:
+                turns.remove(turn)
 
 
         # Constantly move the snake forward.
         # !!! I moved this until after the key press detection. It makes more sense to
         # !!! detect which keys have been pressed and then do the moving afterwards.
         # !!! I also slowed down speed to 5, for now.
-        snake.__move__()
+        snake.move()
         #time.sleep(0.5)  # Delay before next movement of snake
 
-        mk_food(screen, (500, 500))
+        global food_pos
+        screen.blit(food, food_pos)
 
-        if
+        # !!! Detect whether snake has collided with food
+        if snake.detectHeadCollideFood(food_pos):
             print("Food eaten!")
             food_pos = (random.randint(50, 750), random.randint(50, 550))
-            mk_food(screen, food_pos)
-
-        # Every 4 secs, reset Turning point list so it does not turn if you collide with a turning again.
-
+            screen.blit(food, food_pos)
 

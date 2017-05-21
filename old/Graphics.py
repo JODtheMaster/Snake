@@ -26,12 +26,12 @@ class Graphics():
         screen.fill((51, 102, 0))           # This is a dark forest green colour
 
         # Render snake. This must be given under the while loop
-        snake.__display__(screen)
+        snake.display(screen)
 
         """      Motion handler      """
 
         # Constantly move the snake forward.
-        snake.__move__()
+        snake.move()
         time.sleep(0.5)                     # Delay before next movement of snake
 
         # Get key events
@@ -71,7 +71,7 @@ class Graphics():
 
         # Turn the snake based on turning point
         for segment in snake.snake:
-            segment.__turn__(turning)
+            segment.turn(turning)
 
         # Detect if the head hits the edge
         snake.snake[0].hit_edge()

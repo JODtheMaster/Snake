@@ -12,7 +12,7 @@ class Snake:
         # Call different Segment objects as list. This will make up the snake
         self.snake = [Segment(Type.head, [100, 200]), Segment(Type.body, [100, 240]), Segment(Type.tail, [100, 280])]
 
-    def __display__(self, screen):
+    def display(self, screen):
 
         # Render the snake onto the board
         for segment in self.snake:
@@ -64,13 +64,27 @@ class Snake:
             elif segment.type == Type.tail_right:
                 screen.blit(right_tail, segment.pos)
 
+    def detectHeadCollideFood(self, food_pos):
+        # !!! Get the position of the head of the snake
+        head_pos_x = self.snake[0].pos[0]
+        head_pos_y = self.snake[0].pos[1]
+        food_pos_x = food_pos[0]
+        food_pos_y = food_pos[1]
+        # !!! Work out the rectangle bounded by the snake head.
+        # !!! On x axis, this is head_pos[0] - 20 .. head_pos[0] + 20
+        # !!! On y axis, this is head_pos[1] - 20 .. head_pos[1] + 20
+        if (food_pos_x >= head_pos_x - 20) and (food_pos_x <= head_pos_x + 20):
+            if (food_pos_y >= head_pos_y - 20) and (food_pos_y <= head_pos_y + 20):
+                # !!! We have food in the box bounded by the snake head
+                return True
 
 
-    def __move__(self):
+
+    def move(self):
 
         # Move the entire snake
         for segment in self.snake:
-            segment.__move__(segment.direction)
+            segment.move(segment.direction)
 
 
 class Segment:
@@ -81,9 +95,11 @@ class Segment:
 
         self.pos = pos
 
-    def __move__(self, direction):
 
-        # Move the segment
+    def move(self, direction):
+
+        # Move the segment. The way we will do this is to change the pos, which
+        # thus affects where the segment is blitted.
         # Direction can either be left, right, up, down
         if direction == Directions.RIGHT:
             self.pos[0] += speed  # Remember that Pygame coordinates are negative quadrant-based
@@ -131,7 +147,7 @@ class Segment:
             raise Exception("This turning point doesn't exist!")"""
 
     # Method for turning the snake
-    def __turn__(self, direction):
+    def turn(self, direction):
         # If the segment is a body type, then change the type to the rotated segment type.
         # !!! If the segment is a head or tail type, we will not execute any turn because
         # !!! the direction changes only apply to self.type == body
@@ -189,7 +205,8 @@ class Segment:
                 self.type = Type.tail_right
                 self.direction = Directions.RIGHT
 
-    def __edge__(self):
+
+    def isEdge(self):
         # Detect if the snake has hit the edge or not.
 
         # If the x pos of a segment is at the left or right:
@@ -200,7 +217,8 @@ class Segment:
         elif self.pos[1] == 0 or self.pos[1] == 600:
             dead = True
 
-    def __notTurn__(self):
+
+    def notTurn(self):
         # This method detects for turned versions of segments and turns them back to the original "body",
         # albeit rotated, after it leaves the turning point.
         # The fact that it has left the turning point is defined just before the line is referenced (see Graphics)
@@ -216,7 +234,6 @@ class Segment:
                 self.type = Type.body_left
             elif self.direction == Directions.RIGHT:
                 self.type = Type.body_right
-
 
 
     # Python method for calling indexed objects.

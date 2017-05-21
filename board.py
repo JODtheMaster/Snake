@@ -20,7 +20,5 @@ class Turning:
         return self.pos == segment.pos
 
 
-def mk_food(screen, food_pos):
-    # Create first food. Must not be created in the snake segments.
-    screen.blit(food, food_pos)
+food_pos = (random.randint(50, 750), random.randint(50, 550))
 
