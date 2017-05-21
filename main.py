@@ -35,6 +35,10 @@ class Controller():
                 if ev.type == pg.QUIT:
                     pg.quit()
 
+            # Create game clock
+            clock = pg.time.Clock()
+            clock.tick(10)
+
             # Call graphics handler. This is in charge of rendering all of the stuff in the game. Located in Graphics.py
             Graphics(screen)
 

@@ -1,6 +1,9 @@
 import pygame as pg
 import random
 
+from variables import *
+
+
 class Turning:
     def __init__(self, posx, posy, direction):
         # Generate a turning point at a certain point (posx, posy)
@@ -15,3 +18,9 @@ class Turning:
     # Returns a value of true if it is, false if it is not.
     def __isTurn__(self, segment):
         return self.pos == segment.pos
+
+
+def mk_food(screen, food_pos):
+    # Create first food. Must not be created in the snake segments.
+    screen.blit(food, food_pos)
+
