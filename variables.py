@@ -90,4 +90,3 @@ games_played = 0
 
 dead = False            # Determines whether the snake has died yet
 
-

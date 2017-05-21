@@ -3,7 +3,6 @@ import random
 
 from variables import *
 
-
 class Turning:
     def __init__(self, posx, posy, direction):
         # Generate a turning point at a certain point (posx, posy)
@@ -20,5 +19,23 @@ class Turning:
         return self.pos == segment.pos
 
 
-food_pos = (random.randint(50, 750), random.randint(50, 550))
+# This one returns a procedural food position.
+# It makes sure that the food cannot be ANYWHERE near the food.
+def get_food_pos(snake):
+    food_pos = (random.randint(50, 750), random.randint(50, 550))
 
+    # Detect if the food would be in the rectangle bounding any segment.
+    # If so, repeat the function
+    for segment in snake:
+
+        if (food_pos[0] >= segment.pos[0] - 20) and (food_pos[0] <= segment.pos[0] + 20):
+            if (food_pos[1] >= segment.pos[1] - 20) and (food_pos[1] <= segment.pos[1] + 20):
+
+                get_food_pos(snake)
+
+            else:
+                return food_pos
+        else:
+            return food_pos
+
+food_pos = (400, 300)

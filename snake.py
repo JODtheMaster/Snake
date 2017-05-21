@@ -10,7 +10,7 @@ class Snake:
     def __init__(self):
 
         # Call different Segment objects as list. This will make up the snake
-        self.snake = [Segment(Type.head, [100, 200]), Segment(Type.body, [100, 240]), Segment(Type.tail, [100, 280])]
+        self.snake = [Segment(Type.head, [100, 200], Directions.UP), Segment(Type.body, [100, 240], Directions.UP), Segment(Type.tail, [100, 280], Directions.UP)]
 
     def display(self, screen):
 
@@ -79,18 +79,51 @@ class Snake:
                 return True
 
 
-
     def move(self):
 
         # Move the entire snake
         for segment in self.snake:
             segment.move(segment.direction)
 
+    def eat(self):
+        # Makes the snake longer by changing the last in the list to a body and then
+        # appends a new tail.
+        # Before just appending, we must know which direction it is travelling in so we know which version to append.
+
+        if self.snake[-1].direction == Directions.LEFT:
+            # Compute pos of appended segment:
+            a_pos = [self.snake[-1].pos[0] + 40, self.snake[-1].pos[1]]
+
+            # Append and change type
+            self.snake[-1].type = Type.body_left
+            self.snake.append(Segment(Type.tail_left, a_pos, Directions.LEFT))
+
+        elif self.snake[-1].direction == Directions.RIGHT:
+            a_pos = [self.snake[-1].pos[0] - 40, self.snake[-1].pos[1]]
+
+            self.snake[-1].type = Type.body_right
+            self.snake.append(Segment(Type.tail_right, a_pos, Directions.RIGHT))
+
+        elif self.snake[-1].direction == Directions.UP:
+            a_pos = [self.snake[-1].pos[0], self.snake[-1].pos[1] + 40]
+
+            self.snake[-1].type = Type.body_up
+            self.snake.append(Segment(Type.tail_up, a_pos, Directions.UP))
+
+        elif self.snake[-1].direction == Directions.DOWN:
+            a_pos = [self.snake[-1].pos[0], self.snake[-1].pos[1] - 40]
+
+            self.snake[-1].type = Type.body_down
+            self.snake.append(Segment(Type.tail_down, a_pos, Directions.DOWN))
+
+        #print("Eat with new tail at: ", self.snake[-1].pos, " added after: ", self.snake[-2].pos)
+        #print("... with new direction: ", self.snake[-1].direction, " after: ", self.snake[-2].direction)
+
 
 class Segment:
 
-    def __init__(self, type, pos):
-        self.direction = Directions.UP
+    def __init__(self, type, pos, direction):
+        self.direction = direction
         self.type = type  # Represents the type it is (ie: rotated left, rotated right, head, tail, etc.)
 
         self.pos = pos

@@ -55,16 +55,20 @@ class Graphics:
         the Turning point at the position of the head.
         """
         if keys[K_w]:
-            turns.append(Turning(snake.snake[0].pos[0], snake.snake[0].pos[1], Directions.UP))
+            if snake.snake[0].direction is not Directions.DOWN:             # You cannot turn from down to up.
+                turns.append(Turning(snake.snake[0].pos[0], snake.snake[0].pos[1], Directions.UP))
 
         elif keys[K_a]:
-            turns.append(Turning(snake.snake[0].pos[0], snake.snake[0].pos[1], Directions.LEFT))
+            if snake.snake[0].direction is not Directions.RIGHT:
+                turns.append(Turning(snake.snake[0].pos[0], snake.snake[0].pos[1], Directions.LEFT))
 
         elif keys[K_s]:
-            turns.append(Turning(snake.snake[0].pos[0], snake.snake[0].pos[1], Directions.DOWN))
+            if snake.snake[0].direction is not Directions.UP:
+                turns.append(Turning(snake.snake[0].pos[0], snake.snake[0].pos[1], Directions.DOWN))
 
         elif keys[K_d]:
-            turns.append(Turning(snake.snake[0].pos[0], snake.snake[0].pos[1], Directions.RIGHT))
+            if snake.snake[0].direction is not Directions.LEFT:
+                turns.append(Turning(snake.snake[0].pos[0], snake.snake[0].pos[1], Directions.RIGHT))
 
 
         # Continuously detect whether the segment is at a turning point:
@@ -79,12 +83,24 @@ class Graphics:
                 # If it has, we change it to a rotated version of the body.
                     segment.notTurn()
 
+        global food_pos
+        screen.blit(food, food_pos)
+
+        # !!! Detect whether snake has collided with food
+        if snake.detectHeadCollideFood(food_pos):
+            print("Food eaten!")
+            snake.eat()
+            for turn in turns:
+                print("Turn at: ", turn.pos)
+            food_pos = (random.randint(50, 750), random.randint(50, 550))
+
+            screen.blit(food, get_food_pos(snake.snake))
+
         # Remove turn once the tail has passed the turning point.
         # Since this is after the code that turns in the tail should already have been turned.
         for turn in turns:
             if turn.pos == snake.snake[-1].pos:
                 turns.remove(turn)
-
 
         # Constantly move the snake forward.
         # !!! I moved this until after the key press detection. It makes more sense to
@@ -92,13 +108,4 @@ class Graphics:
         # !!! I also slowed down speed to 5, for now.
         snake.move()
         #time.sleep(0.5)  # Delay before next movement of snake
-
-        global food_pos
-        screen.blit(food, food_pos)
-
-        # !!! Detect whether snake has collided with food
-        if snake.detectHeadCollideFood(food_pos):
-            print("Food eaten!")
-            food_pos = (random.randint(50, 750), random.randint(50, 550))
-            screen.blit(food, food_pos)
 
