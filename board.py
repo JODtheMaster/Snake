@@ -1,7 +1,7 @@
 import pygame as pg
 import random
 
-from variables import *
+import variables
 
 class Turning:
     def __init__(self, posx, posy, direction):
@@ -39,3 +39,14 @@ def get_food_pos(snake):
             return food_pos
 
 food_pos = (400, 300)
+
+
+def TopBar(screen):
+    # Create bar at top with highscore, pause, exit,
+    pg.draw.rect(screen, (38, 77, 0), (0, 0, 800, 40))
+
+    # Initialise font
+    Font = pg.font.SysFont("Comicsansms", 30, False, False)
+    # Draw text by creating Surface and then blitting
+    Score = Font.render("Score: " + str(variables.score), True, (225, 255, 0))
+    screen.blit(Score, (500, -5))

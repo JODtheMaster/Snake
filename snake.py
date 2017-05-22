@@ -269,6 +269,14 @@ class Segment:
                 self.type = Type.body_right
 
 
+    def collision(self, posx, posy):
+        # Method for working out if segment has collided with another (40x40) object.
+        # Assumes width of everything is 40.
+        if (posx >= self.pos[0] - 20) and (posx <= self.pos[0] + 20):
+            if (posy >= self.pos[1] - 20) and (posy <= self.pos[1] + 20):
+                return True
+
+
     # Python method for calling indexed objects.
     def __getitem__(self, key):
         return self.pos[key]

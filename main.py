@@ -9,6 +9,7 @@ This module is what actually runs the program.
 # Load builtins
 import pygame as pg
 from pygame.locals import *
+import _thread
 
 # Load my own modules
 import button           # Button is a module that I wrote myself that allows simple and fast implementation of buttons
@@ -27,7 +28,7 @@ class Controller():
         width, height = 800, 600
         screen = pg.display.set_mode((width, height))
         pg.display.set_caption("Snake v1.0")
-        screen.fill(white)
+        #screen.fill(white)
 
         # Initialise pygame game loop by getting all events and checking if quit is true
         while True:
@@ -38,6 +39,7 @@ class Controller():
             # Create game clock
             clock = pg.time.Clock()
             clock.tick(10)
+
 
             # Call graphics handler. This is in charge of rendering all of the stuff in the game. Located in Graphics.py
             Graphics(screen)

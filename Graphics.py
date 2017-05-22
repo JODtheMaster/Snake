@@ -10,9 +10,10 @@ from pygame.locals import *
 import time
 
 from button import *
-from variables import *
+import variables
 from snake import *
 from board import *
+from variables import States, Directions
 
 # Call snake class
 snake = Snake()
@@ -28,6 +29,8 @@ class Graphics:
         for x in range(0, 800, 40):
             for y in range(0, 600, 40):
                 screen.blit(grass, (x, y))
+
+        TopBar(screen)
 
         # Render snake. This must be given under the while loop
         snake.display(screen)
@@ -88,10 +91,12 @@ class Graphics:
 
         # !!! Detect whether snake has collided with food
         if snake.detectHeadCollideFood(food_pos):
-            print("Food eaten!")
+            #print("Food eaten!")
             snake.eat()
-            for turn in turns:
-                print("Turn at: ", turn.pos)
+            variables.score += 1
+            #print(variables.score)
+            #for turn in turns:
+                #print("Turn at: ", turn.pos)
             food_pos = (random.randint(50, 750), random.randint(50, 550))
 
             screen.blit(food, get_food_pos(snake.snake))
@@ -102,10 +107,33 @@ class Graphics:
             if turn.pos == snake.snake[-1].pos:
                 turns.remove(turn)
 
+        """ Snake Death Messages """
+
+        # Kill the snake if a segment collides with another.
+        # We need 2 "for" loops to test every single segment with every single other segment.
+        for seg1 in snake.snake:
+            for seg2 in snake.snake:
+                if seg1 is not seg2:
+                    if seg1.pos == seg2.pos:
+                        variables.state = States.GAMEOVER
+                        #print("Dead at: ", seg1.pos, seg2.pos, "Type: ", seg1.type, seg2.type)
+
+        # Kill the snake if its head hits the sides
+        if snake.snake[0].pos[0] <= 50 or snake.snake[0].pos[0] >= 770:
+            variables.state = States.GAMEOVER
+            #print("Dead")
+        elif snake.snake[0].pos[1] <= 30 or snake.snake[0].pos[1] >= 570:
+            variables.state = States.GAMEOVER
+            #print("Dead")
+
         # Constantly move the snake forward.
         # !!! I moved this until after the key press detection. It makes more sense to
         # !!! detect which keys have been pressed and then do the moving afterwards.
         # !!! I also slowed down speed to 5, for now.
-        snake.move()
+        if variables.state is States.RUNNING:
+            snake.move()
         #time.sleep(0.5)  # Delay before next movement of snake
 
+        # Lose screen
+        if variables.state is States.GAMEOVER:
+            screen.blit(variables.game_over, (0, 0))

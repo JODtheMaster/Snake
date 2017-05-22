@@ -2,10 +2,6 @@ import pygame as pg
 from enum import Enum
 import time
 
-# colours
-white = (255, 255, 255)
-black = (0, 0, 0)
-
 
 # Images
 play_i = pg.image.load("assets\images\play inactive.png")
@@ -48,6 +44,8 @@ food = pg.image.load("assets\images\\food.png")
 grass = pg.image.load("assets\images\grass.png")
 # Grass sprite provided by http://spritefx.blogspot.co.uk/2013/04/sprite-grass.html
 
+game_over = pg.image.load("assets\images\game over.png")
+
 # Directions
 class Directions(Enum):
     LEFT  = 0
@@ -83,10 +81,18 @@ class Type(Enum):
 
 
 # Game settings
-speed        = 40
+speed        = 20
 score        = 0
 highscore    = 0
 games_played = 0
 
-dead = False            # Determines whether the snake has died yet
 
+class States(Enum):
+    # Different states the program can have at a certain time.
+    RUNNING = 0
+    PAUSED = 1
+    GAMEOVER = 2
+
+
+# Define the state the game is in.
+state = States.RUNNING
