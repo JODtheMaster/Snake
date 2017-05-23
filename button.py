@@ -46,12 +46,13 @@ def Button(Surface, text, font, posx, posy, width, height, colour, textCol, even
     Surface.blit(text, textcentre)       #Blit text
 
 
-def picture_button(Surface, image, activeImage, posx, posy, command=None):
+def picture_button(Surface, image, activeImage, posx, posy, command, kwargs=None):
     """
     This command is used to create a button that is not just a rectangle
      but based on an image.
      The activeImage variable represents a change in the displayed image when the mouse clicks/ hovers over it.
      posx, posy, width, height and command take the same values as in the other command.
+     Kwargs is the arguments the command takes.
      Very similar code to in the last button has been used, and as such less explanation has been given.
     """
     # Get click and pos:

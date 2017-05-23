@@ -22,15 +22,16 @@ turns = []
 
 
 # NB: The Graphics happens under the while loop, so it continues to execute.
-class Graphics:
-    def __init__(self, screen):
+def Graphics(screen):
+
+        variables.state = States.RUNNING
 
         # Render grass
         for x in range(0, 800, 40):
             for y in range(0, 600, 40):
                 screen.blit(grass, (x, y))
 
-        TopBar(screen)
+        boardObjects(screen)
 
         # Render snake. This must be given under the while loop
         snake.display(screen)
@@ -76,15 +77,18 @@ class Graphics:
 
         # Continuously detect whether the segment is at a turning point:
         for segment in snake.snake:
-            for turn in turns:
+            for i in range(0, len(snake.snake) - 1):
+                for turn in turns:
 
-                if turn.__isTurn__(segment):                 # turning.__isTurn__()returns true if segment and turning have same pos
-                    segment.turn(turn.direction)         # Turn the snake's segment in the direction specified
-                    #print("Turning in", turn.direction, "segment type", segment.type, "snake direction:", segment.direction)
-                else:
-                # We also need to continuously detect whether the turned segment has LEFT the turning point.
-                # If it has, we change it to a rotated version of the body.
-                    segment.notTurn()
+                    if turn.__isTurn__(segment):                          # turning.__isTurn__()returns true if segment and turning have same pos
+                        segment.turn(turn.direction, snake.snake[i - 1])         # Turn the snake's segment in the direction specified
+
+                        #print("Turning in", turn.direction, "segment type", segment.type, "snake direction:", segment.direction)
+                    else:
+
+                    # We also need to continuously detect whether the turned segment has LEFT the turning point.
+                    # If it has, we change it to a rotated version of the body.
+                        segment.notTurn()
 
         global food_pos
         screen.blit(food, food_pos)
@@ -93,10 +97,12 @@ class Graphics:
         if snake.detectHeadCollideFood(food_pos):
             #print("Food eaten!")
             snake.eat()
-            variables.score += 1
+            variables.score += speed                # Why are we doing this? The faster you go, the more your score multiplier!
+
             #print(variables.score)
             #for turn in turns:
                 #print("Turn at: ", turn.pos)
+
             food_pos = (random.randint(50, 750), random.randint(50, 550))
 
             screen.blit(food, get_food_pos(snake.snake))
@@ -114,12 +120,13 @@ class Graphics:
         for seg1 in snake.snake:
             for seg2 in snake.snake:
                 if seg1 is not seg2:
+                    #if seg1.collision(seg2.pos[0], seg2.pos[1]):
                     if seg1.pos == seg2.pos:
                         variables.state = States.GAMEOVER
                         #print("Dead at: ", seg1.pos, seg2.pos, "Type: ", seg1.type, seg2.type)
 
         # Kill the snake if its head hits the sides
-        if snake.snake[0].pos[0] <= 50 or snake.snake[0].pos[0] >= 770:
+        if snake.snake[0].pos[0] <= 30 or snake.snake[0].pos[0] >= 770:
             variables.state = States.GAMEOVER
             #print("Dead")
         elif snake.snake[0].pos[1] <= 30 or snake.snake[0].pos[1] >= 570:

@@ -14,7 +14,7 @@ import _thread
 # Load my own modules
 import button           # Button is a module that I wrote myself that allows simple and fast implementation of buttons
 from snake import *
-from variables import *
+from variables import States
 from board import *
 from Graphics import *
 
@@ -38,12 +38,15 @@ class Controller():
 
             # Create game clock
             clock = pg.time.Clock()
-            clock.tick(10)
+            clock.tick(30)
 
 
             # Call graphics handler. This is in charge of rendering all of the stuff in the game. Located in Graphics.py
-            Graphics(screen)
-
+            if variables.state == States.HOME:
+                homescreen(screen, Graphics)
+            elif variables.state == States.RUNNING:
+                Graphics(screen)
+            #Graphics(screen)
             # Continuously update pygame display
             pg.display.flip()
 

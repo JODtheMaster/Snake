@@ -4,8 +4,6 @@ import time
 
 
 # Images
-play_i = pg.image.load("assets\images\play inactive.png")
-play_a = pg.image.load("assets\images\play active.png")
 
 # The following start as these certain defined images,
 # But their contents shall change as the snake is rotated.
@@ -20,6 +18,12 @@ left   = pg.image.load("assets\images\snake left.png")
 right  = pg.image.load("assets\images\snake right.png")
 up     = pg.image.load("assets\images\snake up.png")
 down   = pg.image.load("assets\images\snake down.png")
+
+# Flipped versions of pivot points
+left_f   = pg.transform.flip(left, True, False)
+right_f  = pg.transform.flip(right, True, False)
+up_f     = pg.transform.flip(up, True, False)
+down_f   = pg.transform.flip(down, True, False)
 
 # Rotated versions of head
 up_head    = pg.image.load("assets\images\snake head.png")
@@ -44,7 +48,22 @@ food = pg.image.load("assets\images\\food.png")
 grass = pg.image.load("assets\images\grass.png")
 # Grass sprite provided by http://spritefx.blogspot.co.uk/2013/04/sprite-grass.html
 
-game_over = pg.image.load("assets\images\game over.png")
+wall       = pg.image.load("assets\images\wall.png")
+
+game_over  = pg.image.load("assets\images\game over.png")
+
+homescreen = pg.image.load("assets\images\homescreen.png")
+
+# Load buttons
+play_inactive = pg.image.load("assets\images\\buttons\play inactive.png")
+play_active   = pg.image.load("assets\images\\buttons\play active.png")
+
+settings_inactive = pg.image.load("assets\images\\buttons\settings inactive.png")
+settings_active   = pg.image.load("assets\images\\buttons\settings active.png")
+
+highscores_inactive = pg.image.load("assets\images\\buttons\highscores inactive.png")
+highscores_active   = pg.image.load("assets\images\\buttons\highscores active.png")
+
 
 # Directions
 class Directions(Enum):
@@ -79,20 +98,29 @@ class Type(Enum):
     tail_up    = 17
     tail_down  = 18
 
+    f_up_pivot    = 19
+    f_down_pivot  = 20
+    f_left_pivot  = 21
+    f_right_pivot = 22
 
 # Game settings
-speed        = 20
+speed        = 10
 score        = 0
-highscore    = 0
 games_played = 0
+
+highscore_1 = 0
+highscore_2 = 0
+highscore_3 = 0
 
 
 class States(Enum):
     # Different states the program can have at a certain time.
-    RUNNING = 0
-    PAUSED = 1
-    GAMEOVER = 2
-
+    RUNNING    = 0
+    PAUSED     = 1
+    GAMEOVER   = 2
+    HOME       = 3                  # Home menu
+    SETTINGS   = 4                  # Settings menu
+    HIGHSCORES = 5                  # Highscores display
 
 # Define the state the game is in.
-state = States.RUNNING
+state = States.HOME

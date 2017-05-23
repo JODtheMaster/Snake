@@ -34,6 +34,16 @@ class Snake:
             elif segment.type == Type.right_pivot:
                 screen.blit(right, segment.pos)
 
+            # Blit flipped versions of pivot points
+            elif segment.type == Type.f_up_pivot:
+                screen.blit(up_f, segment.pos)
+            elif segment.type == Type.f_down_pivot:
+                screen.blit(down_f, segment.pos)
+            elif segment.type == Type.f_left_pivot:
+                screen.blit(left_f, segment.pos)
+            elif segment.type == Type.f_right_pivot:
+                screen.blit(right_f, segment.pos)
+
             # Blit rotated head versions
             elif segment.type == Type.head_up:
                 screen.blit(up_head, segment.pos)
@@ -180,31 +190,84 @@ class Segment:
             raise Exception("This turning point doesn't exist!")"""
 
     # Method for turning the snake
-    def turn(self, direction):
+    def turn(self, direction, previous_segment):
         # If the segment is a body type, then change the type to the rotated segment type.
-        # !!! If the segment is a head or tail type, we will not execute any turn because
+        # Here, we need to handle every single case so the code is very long.
+        # Most of it is just repetitions of itself with different event cases.
+        # Thus, explanations are only given for the first of each type of motion
+
+        """# !!! If the segment is a head or tail type, we will not execute any turn because
         # !!! the direction changes only apply to self.type == body
         # !!! this is also true for for Type.up, Type.down, Type.left, Type.right. You need to
         # !!! rethink the logic here.
-        #print("__turn__ direction", direction, "type: ", self.type)
+        #print("__turn__ direction", direction, "type: ", self.type)"""
+
+        # If the segment is any sort of BODY:
         if self.type == Type.body or self.type == Type.body_up or self.type == Type.body_down or self.type == Type.body_left or self.type == Type.body_right:
+
+            # If the turning point wants it to turn UP:
             if direction == Directions.UP:
-                self.type = Type.up_pivot
+                # Turn it up
                 self.direction = Directions.UP
+                # Change the pivot type so it fits between this one and the previous. (This is why we need the prev direction)
+                if previous_segment.direction == Directions.LEFT:
+                    self.type = Type.up_pivot
+                    # Move the segment and previous segments (why? This is so they do not go inside each other whilst turning)
+                    # This is different depending on the direction of the previous
+                    #self.pos[1] -= 40
+                    #previous_segment.pos[0] -= 40
+                elif previous_segment.direction == Directions.RIGHT:
+                    self.type = Type.f_up_pivot
+
+                    #self.pos[1] -= 40
+                    #previous_segment.pos[0] += 40
 
             elif direction == Directions.DOWN:
-                self.type = Type.down_pivot
                 self.direction = Directions.DOWN
+                if previous_segment.direction == Directions.LEFT:
+                    self.type = Type.down_pivot
+
+                    #self.pos[1] += 40
+                    #previous_segment.pos[0] -= 40
+
+                elif previous_segment.direction == Directions.RIGHT:
+                    self.type = Type.f_down_pivot
+
+                    #self.pos[1] += 40
+                    #previous_segment.pos[0] += 40
+
 
             elif direction == Directions.LEFT:
-                self.type = Type.left_pivot
                 self.direction = Directions.LEFT
+                if previous_segment.direction == Directions.UP:
+                    self.type = Type.left_pivot
+
+                    #self.pos[0] -= 40
+                    #previous_segment.pos[1] -= 40
+
+                elif previous_segment.direction == Directions.DOWN:
+                    self.type = Type.f_left_pivot
+
+                    #self.pos[0] -= 40
+                    #previous_segment.pos[1] += 40
 
             elif direction == Directions.RIGHT:
-                self.type = Type.right_pivot
                 self.direction = Directions.RIGHT
+                if previous_segment.direction == Directions.UP:
+                    self.type = Type.right_pivot
 
+                    #self.pos[0] += 40
+                    #previous_segment.pos[1] -= 40
+
+                elif previous_segment.direction == Directions.DOWN:
+                    self.type = Type.f_right_pivot
+
+                    #self.pos[0] += 40
+                    #previous_segment.pos[1] += 40
+
+        # If the type is snake head:
         elif self.type == Type.head or self.type == Type.head_down or self.type == Type.head_up or self.type == Type.head_left or self.type == Type.head_right:
+
             if direction == Directions.UP:
                 self.type = Type.head_up
                 self.direction = Directions.UP
@@ -222,6 +285,7 @@ class Segment:
                 self.direction = Directions.RIGHT
 
         elif self.type == Type.tail or self.type == Type.tail_up or self.type == Type.tail_down or self.type == Type.tail_left or self.type == Type.tail_right:
+
             if direction == Directions.UP:
                 self.type = Type.tail_up
                 self.direction = Directions.UP
@@ -257,16 +321,16 @@ class Segment:
         # The fact that it has left the turning point is defined just before the line is referenced (see Graphics)
 
         # If it is a turned version:
-        if self.type == Type.left_pivot or self.type == Type.right_pivot or self.type == Type.up_pivot or self.type == Type.down_pivot:
-            # Change to rotated version for different directions.
-            if self.direction == Directions.UP:
-                self.type = Type.body_up
-            elif self.direction == Directions.DOWN:
-                self.type = Type.body_down
-            elif self.direction == Directions.LEFT:
-                self.type = Type.body_left
-            elif self.direction == Directions.RIGHT:
-                self.type = Type.body_right
+        if self.type == Type.left_pivot or self.type == Type.right_pivot or self.type == Type.up_pivot or self.type == Type.down_pivot or self.type == Type.f_left_pivot or self.type == Type.f_right_pivot or self.type == Type.f_up_pivot or self.type == Type.f_down_pivot:
+                # Change to rotated version for different directions.
+                if self.direction == Directions.UP:
+                    self.type = Type.body_up
+                elif self.direction == Directions.DOWN:
+                    self.type = Type.body_down
+                elif self.direction == Directions.LEFT:
+                    self.type = Type.body_left
+                elif self.direction == Directions.RIGHT:
+                    self.type = Type.body_right
 
 
     def collision(self, posx, posy):
