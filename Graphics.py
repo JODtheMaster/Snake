@@ -26,6 +26,8 @@ def Graphics(screen):
 
         variables.state = States.RUNNING
 
+        variables.fps = 2
+
         # Render grass
         for x in range(0, 800, 40):
             for y in range(0, 600, 40):
@@ -77,7 +79,7 @@ def Graphics(screen):
 
         # Continuously detect whether the segment is at a turning point:
         for segment in snake.snake:
-            for i in range(0, len(snake.snake) - 1):
+            for i in range(len(snake.snake)):
                 for turn in turns:
 
                     if turn.__isTurn__(segment):                          # turning.__isTurn__()returns true if segment and turning have same pos
@@ -120,8 +122,7 @@ def Graphics(screen):
         for seg1 in snake.snake:
             for seg2 in snake.snake:
                 if seg1 is not seg2:
-                    #if seg1.collision(seg2.pos[0], seg2.pos[1]):
-                    if seg1.pos == seg2.pos:
+                    if seg1.collision(seg2.pos[0], seg2.pos[1]):
                         variables.state = States.GAMEOVER
                         #print("Dead at: ", seg1.pos, seg2.pos, "Type: ", seg1.type, seg2.type)
 
