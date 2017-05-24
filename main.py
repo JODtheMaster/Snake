@@ -30,6 +30,9 @@ class Controller():
         pg.display.set_caption("Snake v1.0")
         #screen.fill(white)
 
+        # Load highscores
+        get_highscores()
+
         # Initialise pygame game loop by getting all events and checking if quit is true
         while True:
             for ev in pg.event.get():
@@ -38,15 +41,19 @@ class Controller():
 
             # Create game clock
             clock = pg.time.Clock()
-            clock.tick(30)
+            clock.tick(fps)
 
-
-            # Call graphics handler. This is in charge of rendering all of the stuff in the game. Located in Graphics.py
+            # Check for different game states to render different "screens"
             if variables.state == States.HOME:
-                homescreen(screen, Graphics)
+                homescreen(screen)
             elif variables.state == States.RUNNING:
-                Graphics(screen)
+                Graphics(screen)                                # This is the most important handler, contains all game data
+            elif variables.state == States.HIGHSCORES:
+                highscore_screen(screen)
+            elif variables.state == States.SETTINGS:
+                settings_screen(screen)
             #Graphics(screen)
+
             # Continuously update pygame display
             pg.display.flip()
 

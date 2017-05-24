@@ -205,6 +205,37 @@ class Segment:
         # If the segment is any sort of BODY:
         if self.type == Type.body or self.type == Type.body_up or self.type == Type.body_down or self.type == Type.body_left or self.type == Type.body_right:
 
+            """"# If the turning point wants it to turn UP:
+            if direction == Directions.UP:
+                # Turn it up
+                self.direction = Directions.UP
+                # Change the pivot type so it fits between this one and the previous. (This is why we need the prev direction)
+                if previous_segment.direction == Directions.LEFT:
+                    self.type = Type.up_pivot
+                elif previous_segment.direction == Directions.RIGHT:
+                    self.type = Type.f_up_pivot
+
+            elif direction == Directions.DOWN:
+                self.direction = Directions.DOWN
+                if previous_segment.direction == Directions.LEFT:
+                    self.type = Type.down_pivot
+                elif previous_segment.direction == Directions.RIGHT:
+                    self.type = Type.f_down_pivot
+
+            elif direction == Directions.LEFT:
+                self.direction = Directions.LEFT
+                if previous_segment.direction == Directions.UP:
+                    self.type = Type.left_pivot
+                elif previous_segment.direction == Directions.DOWN:
+                    self.type = Type.f_left_pivot
+
+            elif direction == Directions.RIGHT:
+                self.direction = Directions.RIGHT
+                if previous_segment.direction == Directions.UP:
+                    self.type = Type.right_pivot
+                elif previous_segment.direction == Directions.DOWN:
+                    self.type = Type.f_right_pivot"""
+
             # If the turning point wants it to turn UP:
             if direction == Directions.UP:
                 # Turn it up
@@ -213,7 +244,7 @@ class Segment:
                 if previous_segment.direction == Directions.LEFT:
                     self.type = Type.up_pivot
                     # Move the segment and previous segments (why? This is so they do not go inside each other whilst turning)
-                    # This is different depending on the direction of the previous
+                    # This is different depending on the direction of the previous segment.
                     #self.pos[1] -= 40
                     #previous_segment.pos[0] -= 40
                 elif previous_segment.direction == Directions.RIGHT:
@@ -235,7 +266,6 @@ class Segment:
 
                     #self.pos[1] += 40
                     #previous_segment.pos[0] += 40
-
 
             elif direction == Directions.LEFT:
                 self.direction = Directions.LEFT
@@ -268,7 +298,7 @@ class Segment:
         # If the type is snake head:
         elif self.type == Type.head or self.type == Type.head_down or self.type == Type.head_up or self.type == Type.head_left or self.type == Type.head_right:
 
-            if direction == Directions.UP:
+            """if direction == Directions.UP:
                 self.type = Type.head_up
                 self.direction = Directions.UP
 
@@ -282,11 +312,55 @@ class Segment:
 
             elif direction == Directions.RIGHT:
                 self.type = Type.head_right
+                self.direction = Directions.RIGHT"""
+            if direction == Directions.UP:
+                self.direction = Directions.UP
+                self.type = Type.head_up
+                # if previous_segment.direction == Directions.LEFT:
+                #     #self.pos[1] -= 40
+                #     previous_segment.pos[0] -= 40
+                #
+                # elif previous_segment.direction == Directions.RIGHT:
+                #     self.pos[1] -= 40
+                #     previous_segment.pos[0] += 40
+
+            elif direction == Directions.DOWN:
+                self.direction = Directions.DOWN
+                self.type = Type.head_down
+                # if previous_segment.direction == Directions.LEFT:
+                #     self.pos[1] += 40
+                #     previous_segment.pos[0] -= 40
+                #
+                # elif previous_segment.direction == Directions.RIGHT:
+                #     self.pos[1] += 40
+                #     previous_segment.pos[0] += 40
+
+            elif direction == Directions.LEFT:
+                self.direction = Directions.LEFT
+                self.type = Type.head_left
+                # if previous_segment.direction == Directions.UP:
+                #     self.pos[0] -= 40
+                #     previous_segment.pos[1] -= 40
+                #
+                # elif previous_segment.direction == Directions.DOWN:
+                #     self.pos[0] -= 40
+                #     previous_segment.pos[1] += 40
+
+            elif direction == Directions.RIGHT:
                 self.direction = Directions.RIGHT
+                self.type = Type.head_right
+                # if previous_segment.direction == Directions.UP:
+                #     self.pos[0] += 40
+                #     previous_segment.pos[1] -= 40
+                #
+                # elif previous_segment.direction == Directions.DOWN:
+                #     self.pos[0] += 40
+                #     previous_segment.pos[1] += 40
+
 
         elif self.type == Type.tail or self.type == Type.tail_up or self.type == Type.tail_down or self.type == Type.tail_left or self.type == Type.tail_right:
 
-            if direction == Directions.UP:
+            """if direction == Directions.UP:
                 self.type = Type.tail_up
                 self.direction = Directions.UP
 
@@ -300,7 +374,50 @@ class Segment:
 
             elif direction == Directions.RIGHT:
                 self.type = Type.tail_right
+                self.direction = Directions.RIGHT"""
+            if direction == Directions.UP:
+                self.direction = Directions.UP
+                self.type = Type.tail_up
+                # if previous_segment.direction == Directions.LEFT:
+                #     self.pos[1] -= 40
+                #     previous_segment.pos[0] -= 40
+                #
+                # elif previous_segment.direction == Directions.RIGHT:
+                #     self.pos[1] -= 40
+                #     previous_segment.pos[0] += 40
+
+            elif direction == Directions.DOWN:
+                self.direction = Directions.DOWN
+                self.type = Type.tail_down
+                # if previous_segment.direction == Directions.LEFT:
+                #     self.pos[1] += 40
+                #     previous_segment.pos[0] -= 40
+                #
+                # elif previous_segment.direction == Directions.RIGHT:
+                #     self.pos[1] += 40
+                #     previous_segment.pos[0] += 40
+
+            elif direction == Directions.LEFT:
+                self.direction = Directions.LEFT
+                self.type = Type.tail_left
+                # if previous_segment.direction == Directions.UP:
+                #     self.pos[0] -= 40
+                #     previous_segment.pos[1] -= 40
+                #
+                # elif previous_segment.direction == Directions.DOWN:
+                #     self.pos[0] -= 40
+                #     previous_segment.pos[1] += 40
+
+            elif direction == Directions.RIGHT:
                 self.direction = Directions.RIGHT
+                self.type = Type.tail_right
+                # if previous_segment.direction == Directions.UP:
+                #     self.pos[0] += 40
+                #     previous_segment.pos[1] -= 40
+                #
+                # elif previous_segment.direction == Directions.DOWN:
+                #     self.pos[0] += 40
+                #     previous_segment.pos[1] += 40
 
 
     def isEdge(self):

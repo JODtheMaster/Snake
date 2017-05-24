@@ -64,6 +64,12 @@ settings_active   = pg.image.load("assets\images\\buttons\settings active.png")
 highscores_inactive = pg.image.load("assets\images\\buttons\highscores inactive.png")
 highscores_active   = pg.image.load("assets\images\\buttons\highscores active.png")
 
+home_inactive = pg.image.load("assets\images\\buttons\home inactive.png")
+home_active = pg.image.load("assets\images\\buttons\home active.png")
+
+pause_inactive = pg.image.load("assets\images\\buttons\pause inactive.png")
+pause_active = pg.image.load("assets\images\\buttons\pause active.png")
+
 
 # Directions
 class Directions(Enum):
@@ -104,7 +110,7 @@ class Type(Enum):
     f_right_pivot = 22
 
 # Game settings
-speed        = 10
+speed        = 40
 score        = 0
 games_played = 0
 
@@ -112,6 +118,10 @@ highscore_1 = 0
 highscore_2 = 0
 highscore_3 = 0
 
+# Highscores for 2nd level
+highscore_2x1 = 0
+highscore_2x2 = 0
+highscore_2x3 = 0
 
 class States(Enum):
     # Different states the program can have at a certain time.
@@ -124,3 +134,31 @@ class States(Enum):
 
 # Define the state the game is in.
 state = States.HOME
+
+# Game clock speed
+fps = 10
+
+# Method for getting highscores from the HIGHSCORES file
+def get_highscores():
+    # Open text file
+    fp = open("highscores.txt", mode="r")
+
+    # If the file contains nothing, keep highscores as 0 and break
+    if fp.read() == None:
+        return
+
+    else:
+
+        # Set as global so can be read
+        global highscore_1, highscore_2, highscore_3, highscore_2x1, highscore_2x2, highscore_2x3
+        # read each line and assign the value as a highscore.
+        highscore_1 = fp.readline()
+        highscore_2 = fp.readline()
+        highscore_3 = fp.readline()
+
+        highscore_2x1 = fp.readline()
+        highscore_2x2 = fp.readline()
+        highscore_2x3 = fp.readline()
+
+        fp.close()
+

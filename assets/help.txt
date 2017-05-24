@@ -1,0 +1,25 @@
+Need help with Snake?
+
+MOVEMENT
+Done using W,A,S,D.
+You cannot turn in the opposite direction to
+the one you are moving in (ie: you cannot go down
+if you're moving up)
+
+PAUSING AND EXITING
+These are done by clicking on the two buttons at the top
+of the game, next to the score and highscore.
+
+SETTINGS
+Settings can be accessed by PAUSING,
+and also on the home screen. It allows you to:
+- Change your speed
+- Change which map you are playing
+
+HIGHSCORES
+This displays your top 3 all time scores.
+
+
+
+
+
