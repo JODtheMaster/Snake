@@ -36,7 +36,12 @@ def get_food_pos(snake):
             if (food_pos[1] >= segment.pos[1] - 20) and (food_pos[1] <= segment.pos[1] + 20):
 
                 get_food_pos(snake)
-
+        if variables.level2 is True:
+            if food_pos[0] >= 150 and food_pos[0] <= 650 + 40:
+                if food_pos[1] >= 275 and food_pos[1] <= 275 + 40:
+                    get_food_pos(snake)
+                else:
+                    return food_pos
             else:
                 return food_pos
         else:
@@ -196,5 +201,8 @@ def pausescreen(screen):
     button.picture_button(screen, variables.settings_inactive, variables.settings_active, 325, 375, settings)
 
 
-#def level_two():
-    # Method for drawing second level, which has
+def level_two(screen):
+    # Method for drawing second level, which has extra walls:
+    for x in range(150, 650):
+        screen.blit(variables.wall, (x, 275))
+

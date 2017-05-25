@@ -21,6 +21,7 @@ global snake
 
 turns = []
 
+food_pos = (400, 400)
 
 # NB: The Graphics happens under the while loop, so it continues to execute.
 def Graphics(screen):
@@ -33,6 +34,9 @@ def Graphics(screen):
                 screen.blit(grass, (x, y))
 
         boardObjects(screen)
+
+        if variables.level2 is True:
+            level_two(screen)
 
         # Render snake. This must be given under the while loop
         snake.display(screen)
@@ -103,10 +107,11 @@ def Graphics(screen):
             #print(variables.score)
             #for turn in turns:
                 #print("Turn at: ", turn.pos)
+            print(str(food_pos))
 
-            food_pos = (random.randint(50, 750), random.randint(50, 550))
+            food_pos = get_food_pos(snake.snake)
 
-            screen.blit(food, get_food_pos(snake.snake))
+            #screen.blit(food, get_food_pos(snake.snake))
 
         # Remove turn once the tail has passed the turning point.
         # Since this is after the code that turns in the tail should already have been turned.
@@ -135,6 +140,15 @@ def Graphics(screen):
                 variables.state = States.GAMEOVER
                 #print("Dead")
 
+        # Kill the snake if it hits a wall (level 2 only)
+        if variables.level2 is True:
+            for seg in snake.snake:
+                # If snake is in bounds of the walls:
+                if seg.pos[0] >= 150 and seg.pos[0] <= 650 + 40:
+                    if seg.pos[1] >= 275 and seg.pos[1] <= 275 + 40:
+                        variables.state = States.GAMEOVER
+
+
         """ Constantly move the snake forward. """
         # This is only done every certain number of frames. After that, we will reset the timer.
         # That is why we are using TIMER.
@@ -151,15 +165,13 @@ def Graphics(screen):
 
         def game_over():
             # Method for displaying game over screen (used a LOT in next section)
-            screen.blit(variables.game_over, (0, 0))
-            button.picture_button(screen, variables.home_inactive, variables.home_active, 325, 600, home)
-            snake.reset()
+            variables.state = States.GAMEOVER
 
         # Lose screen
         if variables.state is States.GAMEOVER:
             # Detect for new highscore, for each different level type
             # This is quite long, but it is basically iterating over each different case.
-            if level2 is False:
+            if variables.level2 is False:
                 if variables.score > variables.highscore_1:
                     variables.highscore_1 = variables.score
                     screen.blit(variables.new_highscore, (0, 0))
@@ -174,10 +186,10 @@ def Graphics(screen):
                 else:
                     game_over()
 
-            elif level2 is True:
+            elif variables.level2 is True:
                 if variables.score > variables.highscore_2x1:
                     variables.highscore_2x1 = variables.score
-                    screen.blit(variables.game_over, (0, 0))
+                    screen.blit(variables.new_highscore, (0, 0))
                     snake.reset()
 
                 elif variables.score > variables.highscore_2x2:

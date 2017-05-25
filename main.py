@@ -11,11 +11,12 @@ There are a lot of commented out pieces of code and debug statements in this cod
 # Load builtins
 import pygame as pg
 from pygame.locals import *
-import _thread
+#import _thread
 
 # Load my own modules
 import button           # Button is a module that I wrote myself that allows simple and fast implementation of buttons
 from snake import *
+import variables
 from variables import States
 from board import *
 from Graphics import *
@@ -50,6 +51,7 @@ class Controller():
             if variables.state == States.HOME:
                 home_screen(screen)
                 snake.reset()
+                variables.score = 0
             elif variables.state == States.RUNNING:
                 Graphics(screen)                                # This is the most important handler, contains all game data
             elif variables.state == States.HIGHSCORES:
@@ -58,6 +60,11 @@ class Controller():
                 settings_screen(screen)
             elif variables.state == States.PAUSED:
                 pausescreen(screen)
+            elif variables.state == States.GAMEOVER:
+                screen.blit(variables.game_over, (0, 0))
+                button.picture_button(screen, variables.home_inactive, variables.home_active, 325, 300, home)
+                snake.reset()
+
             #Graphics(screen)
 
             # Continuously update pygame display
