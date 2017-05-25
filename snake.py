@@ -129,6 +129,10 @@ class Snake:
         #print("Eat with new tail at: ", self.snake[-1].pos, " added after: ", self.snake[-2].pos)
         #print("... with new direction: ", self.snake[-1].direction, " after: ", self.snake[-2].direction)
 
+    def reset(self):
+        # Method for resetting the snake after death
+        self.snake = [Segment(Type.head, [100, 200], Directions.UP), Segment(Type.body, [100, 240], Directions.UP), Segment(Type.tail, [100, 280], Directions.UP)]
+
 
 class Segment:
 
@@ -245,6 +249,7 @@ class Segment:
                     self.type = Type.up_pivot
                     # Move the segment and previous segments (why? This is so they do not go inside each other whilst turning)
                     # This is different depending on the direction of the previous segment.
+
                     #self.pos[1] -= 40
                     #previous_segment.pos[0] -= 40
                 elif previous_segment.direction == Directions.RIGHT:
@@ -276,7 +281,9 @@ class Segment:
                     #previous_segment.pos[1] -= 40
 
                 elif previous_segment.direction == Directions.DOWN:
-                    self.type = Type.f_left_pivot
+                    self.type = Type.f_up_pivot
+                    # Why are we using UP pivot in a left turn?
+                    # It turns out that this is the pivot point that fits correctly between the two points!
 
                     #self.pos[0] -= 40
                     #previous_segment.pos[1] += 40
@@ -290,7 +297,9 @@ class Segment:
                     #previous_segment.pos[1] -= 40
 
                 elif previous_segment.direction == Directions.DOWN:
-                    self.type = Type.f_right_pivot
+                    self.type = Type.up_pivot
+                    # Again, why are we using UP pivot in a right turn?
+                    # It turns out that again, this is the pivot point that fits correctly between the two points!
 
                     #self.pos[0] += 40
                     #previous_segment.pos[1] += 40

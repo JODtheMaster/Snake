@@ -1,7 +1,7 @@
 import pygame as pg
 from enum import Enum
 import time
-
+import shelve
 
 # Images
 
@@ -51,10 +51,13 @@ grass = pg.image.load("assets\images\grass.png")
 wall       = pg.image.load("assets\images\wall.png")
 
 game_over  = pg.image.load("assets\images\game over.png")
+new_highscore = pg.image.load("assets\images\\new highscore.png")
 
 homescreen = pg.image.load("assets\images\homescreen.png")
 
-# Load buttons
+pause_screen = pg.image.load("assets\images\paused screen.png")
+
+""" Load buttons """
 play_inactive = pg.image.load("assets\images\\buttons\play inactive.png")
 play_active   = pg.image.load("assets\images\\buttons\play active.png")
 
@@ -65,10 +68,26 @@ highscores_inactive = pg.image.load("assets\images\\buttons\highscores inactive.
 highscores_active   = pg.image.load("assets\images\\buttons\highscores active.png")
 
 home_inactive = pg.image.load("assets\images\\buttons\home inactive.png")
-home_active = pg.image.load("assets\images\\buttons\home active.png")
+home_active   = pg.image.load("assets\images\\buttons\home active.png")
 
 pause_inactive = pg.image.load("assets\images\\buttons\pause inactive.png")
-pause_active = pg.image.load("assets\images\\buttons\pause active.png")
+pause_active   = pg.image.load("assets\images\\buttons\pause active.png")
+
+add_inactive = pg.image.load("assets\images\\buttons\\add_speed_inactive.png")
+add_active   = pg.image.load("assets\images\\buttons\\add_speed_active.png")
+
+minus_inactive = pg.image.load("assets\images\\buttons\\minus_speed_inactive.png")
+minus_active   = pg.image.load("assets\images\\buttons\\minus_speed_active.png")
+
+resume_inactive = pg.image.load("assets\images\\buttons\\resume game inactive.png")
+resume_active = pg.image.load("assets\images\\buttons\\resume game active.png")
+
+level_1_inactive = pg.image.load("assets\images\\buttons\\level_1_inactive.png")
+level_1_active = pg.image.load("assets\images\\buttons\\level_1_active.png")
+level_2_inactive = pg.image.load("assets\images\\buttons\\level_2_inactive.png")
+level_2_active = pg.image.load("assets\images\\buttons\\level_2_active.png")
+
+level2 = False                  # If this is made true, then the second level is played.
 
 
 # Directions
@@ -114,6 +133,7 @@ speed        = 40
 score        = 0
 games_played = 0
 
+# Highscores for first level
 highscore_1 = 0
 highscore_2 = 0
 highscore_3 = 0
@@ -136,11 +156,38 @@ class States(Enum):
 state = States.HOME
 
 # Game clock speed
-fps = 10
+fps = 20
 
-# Method for getting highscores from the HIGHSCORES file
+# Timing. This is used for moving the snake:
+# The snake is only moved every certain number of frames
+# determined by changing the next variable, which is DELAY
+# These are both FLOATS
+timing = 0.0
+delay = 0.1
+
+
+""" Functions used to change game states and variable values """
+
+def store_highscores():
+    # Method for storing highscores in the HIGHSCORES file.
+    global highscore_1, highscore_2, highscore_3, highscore_2x1, highscore_2x2, highscore_2x3
+
+    d = shelve.open("assets\highscores\highscores")
+    # Store each as a variable.
+    d['highscore 1'] = highscore_1
+    d['highscore 2'] = highscore_2
+    d['highscore 3'] = highscore_3
+
+    d['highscore 2x1'] = highscore_2x1
+    d['highscore 2x2'] = highscore_2x2
+    d['highscore 2x3'] = highscore_2x3
+    d.close()
+
 def get_highscores():
-    # Open text file
+    # Method for getting highscores from the HIGHSCORES file
+    global highscore_1, highscore_2, highscore_3, highscore_2x1, highscore_2x2, highscore_2x3
+
+    """# Open text file
     fp = open("highscores.txt", mode="r")
 
     # If the file contains nothing, keep highscores as 0 and break
@@ -152,13 +199,60 @@ def get_highscores():
         # Set as global so can be read
         global highscore_1, highscore_2, highscore_3, highscore_2x1, highscore_2x2, highscore_2x3
         # read each line and assign the value as a highscore.
-        highscore_1 = fp.readline()
-        highscore_2 = fp.readline()
-        highscore_3 = fp.readline()
+        highscore_1 = int(fp.readline())
+        highscore_2 = int(fp.readline())
+        highscore_3 = int(fp.readline())
 
-        highscore_2x1 = fp.readline()
-        highscore_2x2 = fp.readline()
-        highscore_2x3 = fp.readline()
+        highscore_2x1 = int(fp.readline())
+        highscore_2x2 = int(fp.readline())
+        highscore_2x3 = int(fp.readline())
 
-        fp.close()
+        fp.close()"""
+    try:
+        d = shelve.open("assets\highscores\highscores")
+        # Load each variable
+        highscore_1 = d['highscore 1']
+        highscore_2 = d['highscore 2']
+        highscore_3 = d['highscore 3']
 
+        highscore_2x1 = d['highscore 2x1']
+        highscore_2x2 = d['highscore 2x2']
+        highscore_2x3 = d['highscore 2x3']
+        d.close()
+    except:
+        print("This file contains nothing!")
+
+
+def timer():
+    # This function creates a timer. The use of this is to speed the game up:
+    # Setting the FPS to a slow level reduced the resposiveness of the game, meaning that
+    # I decided to add a timer so that the snake is only moves every certain number of turns.
+    # It is run under a second thread
+    global frames_elapsed
+    frames_elapsed = 0
+    frames_elapsed += 1
+    time.sleep(0.1)
+
+
+def increase_speed():
+    # Method for changing the delay time, thus increasing the speed.
+    global delay
+    if delay + 0.05 < 1:
+        delay += 0.05
+
+def decrease_speed():
+    # Another method for changing the delay time, thus increasing the speed.
+    # (we need two methods because currently, I cannot make the BUTTON command take arguments.
+    global delay
+    if delay - 0.05 > 0.05:
+        delay -= 0.05
+
+def level_1():
+    # Change state to LEVEL 1:
+    global level2
+    level2 = False
+
+def level_2():
+    # Change state to LEVEL 2
+    global level2
+    level2 = True

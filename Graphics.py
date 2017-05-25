@@ -17,6 +17,7 @@ from variables import States, Directions
 
 # Call snake class
 snake = Snake()
+global snake
 
 turns = []
 
@@ -25,8 +26,6 @@ turns = []
 def Graphics(screen):
 
         variables.state = States.RUNNING
-
-        variables.fps = 2
 
         # Render grass
         for x in range(0, 800, 40):
@@ -126,22 +125,72 @@ def Graphics(screen):
                         variables.state = States.GAMEOVER
                         #print("Dead at: ", seg1.pos, seg2.pos, "Type: ", seg1.type, seg2.type)
 
-        # Kill the snake if its head hits the sides
-        if snake.snake[0].pos[0] <= 30 or snake.snake[0].pos[0] >= 770:
-            variables.state = States.GAMEOVER
-            #print("Dead")
-        elif snake.snake[0].pos[1] <= 30 or snake.snake[0].pos[1] >= 570:
-            variables.state = States.GAMEOVER
-            #print("Dead")
+        # Kill the snake if any segment of it hits the side.
+        # Originally it was just going to be tge head
+        for segment in snake.snake:
+            if segment.pos[0] <= 30 or segment.pos[0] >= 770:
+                variables.state = States.GAMEOVER
+                #print("Dead")
+            elif segment.pos[1] <= 30 or segment.pos[1] >= 560:
+                variables.state = States.GAMEOVER
+                #print("Dead")
 
-        # Constantly move the snake forward.
+        """ Constantly move the snake forward. """
+        # This is only done every certain number of frames. After that, we will reset the timer.
+        # That is why we are using TIMER.
         # !!! I moved this until after the key press detection. It makes more sense to
         # !!! detect which keys have been pressed and then do the moving afterwards.
         # !!! I also slowed down speed to 5, for now.
         if variables.state is States.RUNNING:
-            snake.move()
+            if variables.timing > variables.delay:
+                snake.move()
+                variables.timing = 0
+                #print(delay)
         #time.sleep(0.5)  # Delay before next movement of snake
+
+
+        def game_over():
+            # Method for displaying game over screen (used a LOT in next section)
+            screen.blit(variables.game_over, (0, 0))
+            button.picture_button(screen, variables.home_inactive, variables.home_active, 325, 600, home)
+            snake.reset()
 
         # Lose screen
         if variables.state is States.GAMEOVER:
-            screen.blit(variables.game_over, (0, 0))
+            # Detect for new highscore, for each different level type
+            # This is quite long, but it is basically iterating over each different case.
+            if level2 is False:
+                if variables.score > variables.highscore_1:
+                    variables.highscore_1 = variables.score
+                    screen.blit(variables.new_highscore, (0, 0))
+                    snake.reset()
+
+                elif variables.score > variables.highscore_2:
+                    variables.highscore_2 = variables.score
+                    game_over()
+                elif variables.score > variables.highscore_3:
+                    variables.highscore_3 = variables.score
+                    game_over()
+                else:
+                    game_over()
+
+            elif level2 is True:
+                if variables.score > variables.highscore_2x1:
+                    variables.highscore_2x1 = variables.score
+                    screen.blit(variables.game_over, (0, 0))
+                    snake.reset()
+
+                elif variables.score > variables.highscore_2x2:
+                    variables.highscore_2x2 = variables.score
+                    game_over()
+                elif variables.score > variables.highscore_2x3:
+                    variables.highscore_2x3 = variables.score
+                    game_over()
+                else:
+                    game_over()
+            # Refresh Highscore Storage
+            variables.store_highscores()
+
+        # Update timer.
+        # The delay between each update would be 0.05, since it is 20 FPS (regularly)
+        variables.timing += 0.05
