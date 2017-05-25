@@ -62,12 +62,12 @@ def boardObjects(screen):
         screen.blit(variables.wall, (-20, y))
         screen.blit(variables.wall, (780, y))
 
-    # Draw pause and quit buttons
+    # Draw pause button
     screen.blit( Font.render("Pause", True, (255, 255, 255)) , (150, 5))
-    button.picture_button(screen, variables.pause_inactive, variables.pause_active, 200, 5, pause)
+    button.picture_button(screen, variables.pause_inactive, variables.pause_active, 250, 5, pause)
 
-    screen.blit( Font.render("Home", True, (255, 255, 255)) , (250, 5))
-    button.picture_button(screen, variables.home_inactive, variables.home_active, 300, 5, home)
+    #screen.blit( Font.render("Home", True, (255, 255, 255)) , (250, 5))
+    #button.picture_button(screen, variables.home_inactive, variables.home_active, 300, 5, home)
 
 """ Commands which change the game state """
 def play():
@@ -93,7 +93,7 @@ def pause():
 
 """ Commands which draw the different types of window """
 
-def homescreen(screen):
+def home_screen(screen):
     # Draw homescreen background
     screen.blit(variables.homescreen, (0, 0))
 
@@ -137,9 +137,12 @@ def highscore_screen(screen):
     screen.blit(score_3, (250, 320))
 
     screen.blit(Scores_2, (210, 350))
-    screen.blit(score_4, (250, 260))
-    screen.blit(score_5, (250, 290))
-    screen.blit(score_6, (250, 320))
+    screen.blit(score_4, (250, 380))
+    screen.blit(score_5, (250, 410))
+    screen.blit(score_6, (250, 440))
+
+    #print("Your highscore is" + str(variables.highscore_1))
+
 
 
 def settings_screen(screen):
@@ -150,11 +153,48 @@ def settings_screen(screen):
 
     """ Render title text """
     Font = pg.font.SysFont("yugothicregularyugothicuisemilight", 35, False, False)
+    FontSmall = pg.font.SysFont("yugothicregularyugothicuisemilight", 20, False, False)
     title = Font.render("SETTINGS", True, (255, 255, 255))
-    screen.blit(title, (300, 200))
+    screen.blit(title, (310, 200))
 
     """ Now, we shall draw the speed-changer thing"""
-    pg.draw.rect(screen, (48, 59, 51), (360, 290, 50, 50))
+    screen.blit( Font.render("Change Speed", True, (0, 220, 250)) , (280, 250))
 
-    screen.blit( Font.render(str(variables.speed), True, (255, 255, 255)) , (365, 300))
+    pg.draw.rect(screen, (48, 59, 51), (345, 290, 80, 50))
 
+    screen.blit( Font.render(str( round(variables.delay, 2) ), True, (255, 0, 0)) , (353, 300))
+    screen.blit(FontSmall.render("(Lower numbers are faster. Speed affects your score.)", True, (0, 0, 0)), (175, 350))
+
+    # Draw buttons to change delay time (speed)
+    button.picture_button(screen, variables.minus_inactive, variables.minus_active, 300, 295, variables.decrease_speed)
+    button.picture_button(screen, variables.add_inactive, variables.add_active, 430, 295, variables.increase_speed)
+
+    """ Draw buttons to change the level """
+
+    screen.blit(Font.render("Change Level", True, (0, 220, 250)), (280, 400))
+
+    # Set one level button to be active depending on which level is played.
+    if variables.level2 == True:
+        button.picture_button(screen, variables.level_1_inactive, variables.level_1_active, 325, 450, variables.level_1)
+        button.picture_button(screen, variables.level_2_active, variables.level_2_active, 390, 450, variables.level_2)
+    else:
+        button.picture_button(screen, variables.level_1_active, variables.level_1_active, 325, 450, variables.level_1)
+        button.picture_button(screen, variables.level_2_inactive, variables.level_2_active, 390, 450, variables.level_2)
+
+    # Render the HOME button
+    button.picture_button(screen, variables.home_inactive, variables.home_active, 680, 475, home)
+
+
+def pausescreen(screen):
+    # Render the screen for PAUSED mode
+    screen.blit(variables.pause_screen, (0, 0))
+    # Render RESUME button
+    button.picture_button(screen, variables.resume_inactive, variables.resume_active, 225, 150, play)
+    # Render the HOME button
+    button.picture_button(screen, variables.home_inactive, variables.home_active, 325, 250, home)
+    # Render SETTINGS button
+    button.picture_button(screen, variables.settings_inactive, variables.settings_active, 325, 375, settings)
+
+
+#def level_two():
+    # Method for drawing second level, which has
